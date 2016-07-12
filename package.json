@@ -1,0 +1,17 @@
+{
+  "name": "grpc-memory-leak",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --expose-gc ."
+  },
+  "keywords": [],
+  "author": "Stephen Sawchuk <sawchuk@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "google-auto-auth": "^0.2.4",
+    "google-proto-files": "^0.3.0",
+    "grpc": "^0.15.0"
+  }
+}
