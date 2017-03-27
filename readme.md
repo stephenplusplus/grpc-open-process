@@ -1,11 +1,11 @@
-# grpc-memory-leak
+# grpc-open-process
 
 This uses a test run against the Datastore API, so Google authentication is required.
 
 ```sh
-$ gcloud auth login
-$ export GCLOUD_PROJECT={YOUR_PROJECT_ID}
-$ npm test
+$ gcloud beta auth application-default login
+$ npm install
 
-// ... observe output (run time should be around 3 minutes) ...
+# GO OFFLINE!
+$ npm test
 ```

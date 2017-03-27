@@ -1,5 +1,5 @@
 {
-  "name": "grpc-memory-leak",
+  "name": "grpc-open-process",
   "version": "0.0.0",
   "description": "",
   "main": "index.js",
@@ -10,8 +10,8 @@
   "author": "Stephen Sawchuk <sawchuk@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "google-auto-auth": "^0.2.4",
-    "google-proto-files": "^0.3.0",
-    "grpc": "^0.15.0"
+    "google-auto-auth": "^0.5.4",
+    "google-proto-files": "^0.10.0",
+    "grpc": "^1.2.0"
   }
 }

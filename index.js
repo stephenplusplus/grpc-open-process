@@ -3,22 +3,23 @@
 const googleAuth = require('google-auto-auth')
 const googleProtos = require('google-proto-files')
 const grpc = require('grpc')
-const relative = require('path').relative
-
-const BASE_MEMORY = getMemory()
+const path = require('path')
 
 var service
-var memoryUsage
-var numRequestsMade = 0
 
 googleAuth({
-  scopes: ['https://www.googleapis.com/auth/datastore']
+  scopes: ['https://www.googleapis.com/auth/datastore'],
+
+  // $ gcloud beta auth application-default login
+  //      OR
+  // uncomment with path to service account JSON key file
+  // keyFile: '/path/to/service/account/keyfile.json'
 }).getAuthClient((err, authClient) => {
   if (err) throw err
 
   const proto = grpc.load({
     root: googleProtos('..'),
-    file: relative(googleProtos('..'), googleProtos.datastore.v1beta3)
+    file: path.relative(googleProtos('..'), googleProtos.datastore.v1beta3)
   }, 'proto', { binaryAsBase64: true, convertFieldsToCamelCase: true })
 
   service = new proto.google.datastore.v1beta3.Datastore(
@@ -33,20 +34,6 @@ googleAuth({
 })
 
 function main() {
-  var loop = setInterval(() => {
-    makeRequest()
-
-    if (numRequestsMade === 50 * 1000) {
-      console.log('Calling gc')
-      clearInterval(loop)
-      global.gc()
-    }
-  }, 1)
-}
-
-function makeRequest() {
-  numRequestsMade++
-
   const reqOpts = {
     keys: [
       {
@@ -58,25 +45,16 @@ function makeRequest() {
         ]
       }
     ],
-    projectId: process.env.GCLOUD_PROJECT
+    projectId: 'does-not-need-to-be-replaced'
   }
 
-  service.lookup(reqOpts, {}, err => {
-    if (err) throw err
+  service.lookup(reqOpts, {
+    // process exits :)
+    // deadline: Date.now(),
+
+    // process does not exit :(
+    // deadline: Date.now() + 10
+  }, err => {
+    if (err) console.log(err)
   })
 }
-
-function getMemory() {
-  return Math.round(process.memoryUsage().heapUsed / 1000000)
-}
-
-function logMemoryUsage() {
-  console.log('Memory usage:', getMemory() - BASE_MEMORY + ' mb')
-}
-
-setInterval(() => {
-  memoryUsage = getMemory()
-  console.log('Num requests:', numRequestsMade)
-  logMemoryUsage()
-  console.log('...')
-}, 1000)
